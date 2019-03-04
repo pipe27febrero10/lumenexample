@@ -11,10 +11,49 @@
 |
 */
 
+
+$router->group(['middleware' => ['age']], function() use ($router) {
+		$router->get('age/{age}', function ($age) {
+    return 'age is :  '.$age;
+		});
+	});
+
+$router->group(['middleware' => ['json']], function() use ($router) { // middleware json
+
+	 $router->post('/testusers',['uses'=> 'UsersController@createUser']);
+	 $router->post('/phones',['uses'=> 'PhonesController@createPhone']);
+		
+		$router->group(['middleware' => ['auth']], function() use ($router) {
+	$router->get('/users', ['uses' => 'UsersController@index']);
+
+	$router->group(['middleware' => ['age']], function() use ($router) {
+		$router->post('/users',['uses'=> 'UsersController@createUser']);
+	});
+});
+
+	});
+
+
+$router->group(['middleware' => ['age']], function() use ($router) {
+    
+});
+
+$router->post('/users/login',['uses' => 'UsersController@getToken' ]);
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/hola', function ()  {
-    echo "hola";
+$router->get('/key', function ()  {
+    return str_random(32);
+		});
+
+$router->get('/errorage', function(){
+
+	return "edad insuficiente para registrarse";
 });
+
+
+$router->get('/users/phone/{id}', ['uses' => 'UsersController@getPhone']);
+
+
